@@ -57,9 +57,17 @@ async function ActualizarPelicula(req, res, next) {
     }
     
 }
+async function EliminarPelicula(req, res, next){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
 
 module.exports = {
   ObtenerPelicuas,
   AgregarPelicula,
-  ActualizarPelicula
+  ActualizarPelicula,
+  EliminarPelicula
 };
