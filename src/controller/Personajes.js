@@ -1,13 +1,65 @@
 const { Personaje, Peliculaoserie } = require("../db")
-const { Op } = require("sequelize")
+const { Op, where } = require("sequelize")
  
 
 async function TodoslosPersonajes (req, res, next) {
     try {
-        const personaje = await Personaje.findAll({attributes: ["nombre", "imagen"]})
-        res.status(200).json({
-            data: personaje
-        })
+        const { name } = req.query
+        const { age } = req.query
+        const { movie } = req.query
+        const { weight } = req.query
+        
+        if(!name && !weight && !age && !movie)  {
+            const personaje = await Personaje.findAll({attributes: ["nombre", "imagen"]})
+            if(personaje){
+                res.status(200).json({
+                    data: personaje
+                })
+            }else{
+                res.status(400).json({msg: "no existen personajes en la base de datos"})
+            }
+        } 
+        else if(name){
+            console.log("nombre", name)
+            const personaje = await Personaje.findAll({ where: { nombre: {[Op.iLike]: `%${name}%`} }})
+            console.log(personaje, "personaje de busqueda")
+            if(personaje){
+                res.status(200).json({data: personaje})
+            }else{
+                res.status(400).json({msg: "no existen personajes con ese nombre"})
+
+            }   
+        }
+        else if(age){
+            const personaje = await Personaje.findAll({ where: { edad: age}})
+            console.log(personaje, "personaje de busqueda")
+            if(personaje){
+                res.status(200).json({data: personaje})
+            }else{
+                res.status(400).json({msg: "no existen personajes con esa edad"})
+            }
+        }
+        else if(weight){
+            const personaje = await Personaje.findAll({ where: { peso: weight}})
+            if(personaje){
+                res.status(200).json({data: personaje})
+            }else{
+                res.status(400).json({msg: "no existen personajes con ese peso"})
+            }
+           
+        }else if(movie){
+            console.log(movie, "pelicula  a buscar")
+            const peliculas = await Personaje.findAll({include: [{ model: Peliculaoserie, where: { id: movie}}] })
+            console.log(movie, "pelicula de busqueda")
+            if(peliculas){
+                res.status(200).json({data: peliculas})
+            }else{
+                res.status(400).json({msg: "no existe la pelicula buscada"})
+
+            }
+
+        }
+
     } catch (error) {
         console.log(error)
         res.status(500).send("Algo salio mal")
@@ -18,14 +70,20 @@ async function nuevoPersonaje(req, res, next) {
 
     try {
         const { nombre, imagen, edad, peso, historia} = req.body;
-        console.log(req.body)
-        const personajeNuevo = await Personaje.create({nombre, imagen, edad, peso, historia})
-        if(personajeNuevo){
-            res.status(201).json({
-                message: "Personaje Nuevo Creado",
-                data: personajeNuevo
-            })
+        const personajeexiste = await Personaje.findOne({where: { nombre: nombre}})
+        console.log(personajeexiste)
+        if(!personajeexiste){
+            const personajeNuevo = await Personaje.create({nombre, imagen, edad, peso, historia})
+            if(personajeNuevo){
+                res.status(201).json({
+                    message: "Personaje Nuevo Creado",
+                    data: personajeNuevo
+                })
+            }
+        }else{
+            res.status(400).json({msg: "Ya Existe un personaje con este nombre"})
         }
+
     } catch (error) {
         console.log(error)
         res.status(500).json({msg: "Algo Salio mal"})
@@ -50,33 +108,7 @@ async function obtenerdetalles(req, res, next) {
         
     }
 }
-async function busquedaPersonajes(req, res, next) {
-    try {
-        const { nombre } = req.query
-        const { edad } = req.query
-        const { pelicula } = req.query
-        const { peso } = req.query
-        if(nombre){
-            const personaje = await Personaje.findAll({ where: { nombre: {[Op.iLike]: `%${nombre}%`} }})
-            console.log(personaje, "personaje de busqueda")
-            res.status(200).json({data: personaje})
-        }
-        else if(edad){
-            const personaje = await Personaje.findAll({ where: { edad: edad}})
-            console.log(personaje, "personaje de busqueda")
-            res.status(200).json({data: personaje})
-        }
-        else if(peso){
-            const personaje = await Personaje.findAll({ where: { peso: peso}})
-            res.status(200).json({data: personaje})
-        }else if(pelicula){
-            
-        }
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({msg: "Algo Salio mal con la busqueda"})
-    }
-}
+
 async function actualizarPersonaje(req, res, next) {
     try {
    
@@ -130,6 +162,5 @@ async function eliminarPersonaje(req, res, next){
     nuevoPersonaje,
     eliminarPersonaje,
     actualizarPersonaje,
-    obtenerdetalles,
-    busquedaPersonajes
+    obtenerdetalles
  } 
