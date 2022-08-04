@@ -1,10 +1,11 @@
 const { Router } = require("express");
 const router = Router();
 const PeliculasController = require("../controller/PelicuasoSeries")
-router.get('/', PeliculasController.ObtenerPelicuas)
-router.post('/', PeliculasController.AgregarPelicula)
-router.put('/:id', PeliculasController.ActualizarPelicula)
-router.delete('/:id', PeliculasController.EliminarPelicula)
-router.get('/:id', PeliculasController.ObtenerDetallePelicula)
+const  verifyToken  = require('../middlewares/auth')
+router.get('/', verifyToken ,PeliculasController.ObtenerPelicuas)
+router.post('/', verifyToken ,PeliculasController.AgregarPelicula)
+router.put('/:id', verifyToken ,PeliculasController.ActualizarPelicula)
+router.delete('/:id', verifyToken ,PeliculasController.EliminarPelicula)
+router.get('/:id',  verifyToken,PeliculasController.ObtenerDetallePelicula)
 
 module.exports = router;

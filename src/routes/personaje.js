@@ -1,11 +1,11 @@
 const { Router } = require("express")
 const router = Router();
 const personajeController = require("../controller/Personajes");
-
-router.get("/", personajeController.TodoslosPersonajes);
-router.post("/", personajeController.nuevoPersonaje);
-router.put("/:id", personajeController.actualizarPersonaje);
-router.delete("/:id", personajeController.eliminarPersonaje);
-router.get("/:id", personajeController.obtenerdetalles)
+const  verifyToken  = require('../middlewares/auth')
+router.get("/", verifyToken ,personajeController.TodoslosPersonajes);
+router.post("/", verifyToken ,personajeController.nuevoPersonaje);
+router.put("/:id", verifyToken  ,personajeController.actualizarPersonaje);
+router.delete("/:id", verifyToken ,personajeController.eliminarPersonaje);
+router.get("/:id", verifyToken ,personajeController.obtenerdetalles)
 
 module.exports = router;

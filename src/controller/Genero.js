@@ -40,7 +40,7 @@ async function EliminarGenero(req, res, next) {
         const { id } = req.params;
         const generoexiste = await Genero.findOne({ id: id});
         if(generoexiste){
-            const genero = Genero.destro({where: { id: id}});
+            const genero = Genero.destroy({where: { id: id}});
             if(genero){
                 res.status(201).json({ 
                     msg: "Se elimino El genero", 

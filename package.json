@@ -4,19 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"nodemon -L" ,
+    "start": "nodemon -L",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fredy",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "axios": "^0.27.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "ioredis": "^5.2.2",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.19",

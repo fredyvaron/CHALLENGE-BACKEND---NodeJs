@@ -1,28 +1,28 @@
-const { request } = require("express");
 const { Peliculaoserie, Personaje } = require("../db");
+const { Op } = require("sequelize");
 
 async function ObtenerPelicuas(req, res, next) {
   try {
-    const { nombre, genero, orden } = req.query;
-    if (!nombre && !genero && !orden) {
+    const { name, genre, order } = req.query;
+    if (!name && !genre && !order) {
       const pelicula = await Peliculaoserie.findAll({
         attributes: ["imagen", "titulo"],
       });
       res.status(200).json({ data: pelicula });
-    } else if (nombre) {
+    } else if (name) {
       const peliculanombre = await Peliculaoserie.findAll({
-        where: { titulo: nombre },
+        where: { titulo: {[Op.iLike]: `%${name}%`} } 
       });
       if (peliculanombre) {
         res.status(200).json({ data: peliculanombre });
       } else {
         res
           .status(400)
-          .json({ msg: `No hay peliculas por el titulo ${nombre}` });
+          .json({ msg: `No hay peliculas por el titulo ${name}` });
       }
-    } else if (genero) {
+    } else if (genre) {
       const generopelicula = await Peliculaoserie.findAll({
-        where: { generoId: genero },
+        where: { generoId: genre },
       });
       if (generopelicula) {
         res.status(200).json({ data: generopelicula });
@@ -33,7 +33,7 @@ async function ObtenerPelicuas(req, res, next) {
             msg: `No hay genero de contingenciar a la persona de contingenciar`,
           });
       }
-    } else if (orden.toLowerCase()=== "asc") {
+    } else if (order.toLowerCase()=== "asc") {
       let ordenpelicula = await Peliculaoserie.findAll();
       if (ordenpelicula) {
         ordenpelicula.sort((a, b)=>  new Date(a.creacion) - new Date(b.creacion))
@@ -41,7 +41,7 @@ async function ObtenerPelicuas(req, res, next) {
         res.status(200).json({ data: ordenpelicula });
       }
     }
-    else if(orden.toLowerCase() === "desc"){
+    else if(order.toLowerCase() === "desc"){
       let ordenpelicula = await Peliculaoserie.findAll();
       if (ordenpelicula) {
         ordenpelicula.sort((a, b)=>  new Date(b.creacion) - new Date(a.creacion))

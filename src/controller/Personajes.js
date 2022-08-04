@@ -1,15 +1,15 @@
 const { Personaje, Peliculaoserie } = require("../db")
-const { Op, where } = require("sequelize")
+const { Op} = require("sequelize")
  
 
 async function TodoslosPersonajes (req, res, next) {
     try {
         const { name } = req.query
         const { age } = req.query
-        const { movie } = req.query
+        const { movies } = req.query
         const { weight } = req.query
         
-        if(!name && !weight && !age && !movie)  {
+        if(!name && !weight && !age && !movies)  {
             const personaje = await Personaje.findAll({attributes: ["nombre", "imagen"]})
             if(personaje){
                 res.status(200).json({
@@ -47,10 +47,9 @@ async function TodoslosPersonajes (req, res, next) {
                 res.status(400).json({msg: "no existen personajes con ese peso"})
             }
            
-        }else if(movie){
-            console.log(movie, "pelicula  a buscar")
-            const peliculas = await Personaje.findAll({include: [{ model: Peliculaoserie, where: { id: movie}}] })
-            console.log(movie, "pelicula de busqueda")
+        }else if(movies){
+            const peliculas = await Personaje.findAll({include: [{ model: Peliculaoserie, where: { id: movies}}] })
+            console.log(movies, "pelicula de busqueda")
             if(peliculas){
                 res.status(200).json({data: peliculas})
             }else{
