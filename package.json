@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -L",
-    "test": "mocha"
+    "test": "mocha --timeout 10000"
   },
   "author": "fredy",
   "license": "ISC",

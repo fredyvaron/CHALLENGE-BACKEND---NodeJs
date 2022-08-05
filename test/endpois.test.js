@@ -302,12 +302,43 @@ describe("Gender", () => {
         done();
       });
   });
-
-
+  it("Eliminar Genero", (done) => {
+    chai
+      .request(url)
+      .delete("/gender/1")
+      .set("x-access-token", token)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end((err, res) => {
+        if (err) done();
+        expect(res.body.msg).include("Se elimino El genero");
+        expect(res).to.have.status(201);
+        done();
+      });
+  });
+  it("Si no Exite el genero a eliminar", (done) => {
+    chai
+      .request(url)
+      .delete("/gender/1")
+      .set("x-access-token", token)
+      .set("Content-Type", "application/json")
+      .set("Accept", "application/json")
+      .end((err, res) => {
+        if (err) done();
+        expect(res.body.error).include("No existe el genero a eliminar");
+        expect(res).to.have.status(400);
+        done();
+      });
+  });
 });
 
 describe("Movies", () => {
-
+  before( async function() {
+    const result = await Genero.create({
+    nombre: "Terror-prueba",
+    imagen: "Sin imagen"
+    })
+  });
   it("Crear pelicula", (done) => {
     chai
       .request(url)
@@ -317,7 +348,7 @@ describe("Movies", () => {
         titulo: "thom hand jerry",
         calificacion: "4",
         creacion: "2022-09-05T20:15:29.679Z",
-        genero: "1",
+        genero: "2",
         personaje: ["1"]
       })
       .set("x-access-token", token)
@@ -340,7 +371,7 @@ describe("Movies", () => {
         titulo: "thom hand jerry",
         calificacion: "4",
         creacion: "2022-09-05T20:15:29.679Z",
-        genero: "1",
+        genero: "2",
         personaje: ["1"],
       })
       .set("x-access-token", token)
@@ -349,7 +380,7 @@ describe("Movies", () => {
       .end((err, res)=>{
         if(err) done;
         expect(res.body.error).include("ya existe una pelicula con ese nombre")
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(400);3.
         done();
       })
 
