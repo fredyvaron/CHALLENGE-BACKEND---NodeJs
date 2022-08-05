@@ -91,15 +91,14 @@ async function AgregarPelicula(req, res, next) {
           });
         }
       } else {
-        res.status(400).json({ msg: "ya existe una pelicula con ese nombre" });
+        res.status(400).json({ error: "ya existe una pelicula con ese nombre" });
       }
     } else {
-      console.log("no pasastes todos los datos");
-      res.status(400).json({ msg: "No Pasastes todo los datos" });
+      res.status(400).json({ error: "No Pasastes todo los datos" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Algo Salio mal agregando las peliculas" });
+    res.status(500).json({ error: "Algo Salio mal agregando las peliculas" });
   }
 }
 

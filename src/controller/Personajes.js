@@ -80,12 +80,12 @@ async function nuevoPersonaje(req, res, next) {
                 })
             }
         }else{
-            res.status(400).json({msg: "Ya Existe un personaje con este nombre"})
+            res.status(400).json({error: "Ya Existe un personaje con este nombre"})
         }
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({msg: "Algo Salio mal"})
+        res.status(500).json({error: "Algo Salio mal"})
     }
 }
 async function obtenerdetalles(req, res, next) {
@@ -97,7 +97,7 @@ async function obtenerdetalles(req, res, next) {
             console.log(id)
             res.status(200).json({data: personaje})
             }else{
-                res.status(500).json({msg: "No existe ese id"})
+                res.status(400).json({msg: "No existe ese id"})
             }
         }
     } catch (error) {

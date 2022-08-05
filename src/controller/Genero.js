@@ -18,20 +18,20 @@ async function CrearGenero(req, res, next) {
       if (generoexiste) {
         res
           .status(400)
-          .json({ msg: `Ya Existe un genero con el nombre${nombre}` });
+          .json({ error: `Ya Existe un genero con el nombre${nombre}` });
       } else {
         const genero = await Genero.create({nombre, imagen});
-        res.status(200).json({
+        res.status(201).json({
           msg: "Genero Creado Exitosamente",
           data: genero,
         });
       }
     } else {
-      res.status(400).json({ msg: "No pasastes todos los datos" });
+      res.status(400).json({ error: "No pasastes todos los datos" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ msg: "Algo salio mal creando el genero" });
+    res.status(500).json({ error: "Algo salio mal creando el genero" });
   }
 }
 
@@ -48,7 +48,7 @@ async function EliminarGenero(req, res, next) {
                 })
             }
         }else{
-            res.status(400).json({ msg: "No existe el genero a eliminar"})
+            res.status(400).json({ error: "No existe el genero a eliminar"})
         }
     } catch (error) {
         console.log(error);
